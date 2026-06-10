@@ -6,7 +6,7 @@ hindi=int(input("Enter the marks of the hindi :"))
 english=int(input("Enter the marks of the english :"))
 
 
-# Checking the condition for the value correction.
+# Checking the condition for the value correction
 if maths<=100 and computer<=100 and science<=100 and hindi<=100 and english<=100:
     if maths>=0 and computer>=0 and science>=0 and hindi>=0 and english>=0:
 
