@@ -55,10 +55,13 @@ forward(340)
 right(90)
 forward(80)
 end_fill()
-# # penup()
-# goto(30,170)
-# pendown()
-# circle(40)
+
+
+penup()
+
+goto(30,170)
+pendown()
+circle(40)
 
 
 done()
