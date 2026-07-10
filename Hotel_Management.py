@@ -1,8 +1,8 @@
-
 from customtkinter import *
 from tkinter import messagebox #Imported to display some warnings
 from CTkToolTip import CTkToolTip #Imported for the hover message
 import pymysql
+from PIL import Image, ImageTk
 
 #------------- Data Base for the SQL -------------------
 def db_config():
@@ -10,18 +10,21 @@ def db_config():
     global connection
     connection = pymysql.connect(user="root", host="127.0.0.1", database="hotel_db")
     mycursor = connection.cursor()
-
-
+#--------------------------------------------------------
 
 
 #------------------- Custom Tkinter ----------------------
 taz=CTk()
 taz.title("Hotel Management System")
+#--------------------------------------------------------
 
+#------------------------ Data Base Variable--------------------------------
 usernameVar=StringVar()
 passwordVar=StringVar()
 emailVar=StringVar()
 confirm_passVar=StringVar()
+#--------------------------------------------------------
+
 
 #----------------- MAIN HEADING -------------------
 def hotel_heading():
@@ -42,6 +45,8 @@ def hotel_heading():
     )
     heading.place(x=600,y=20)
 hotel_heading()
+#--------------------------------------------------------
+
 
 #-------------------- Switch option---------------
 def switch_option(switch_to):
@@ -61,17 +66,26 @@ def switch_option(switch_to):
         for delete in page_frame.winfo_children():
             delete.destroy()
         signup_page()
+#--------------------------------------------------------
+
 
 
 #----------------------- Creating a page frame for the login and signup-----------------------
 
 page_frame=CTkFrame(master=taz,width=800,height=550,corner_radius=10)
 page_frame.place(x=370,y=190)
+#--------------------------------------------------------
 
-#----------------- Login Page --------------------
+
+#----------------- Login Button --------------------
+
 login_page_btn=CTkButton(master=taz,text='Login',font=('Arial',20,'bold'),text_color='white',width=120,height=40,
                          corner_radius=10,border_width=2,
                          border_color='white',fg_color='#1F6AA5',command=lambda: switch_option(switch_to='login'))
+login_page_btn.place(x=600,y=100)
+#--------------------------------------------------------
+
+#--------------------------Login Page ------------------------------
 def login_page():
     signup_page_btn.configure(fg_color="gray")
     heading=CTkLabel(master=page_frame, text="Login Page",font=("Bahnschrift", 28, "bold"))
@@ -105,7 +119,8 @@ def login_page():
     #Message box for the login message
     def on_agree(variable, window):
         if variable.get() == "on" and username_entry.get() !='' and pass_entry.get() != '':
-            admin_login()
+            if admin_login():
+                welcome_page()
         elif username_entry.get() == '' and pass_entry.get() == '':
             messagebox.showwarning("Warning", "You must fill the username and password!")
         elif username_entry.get() == '':
@@ -118,9 +133,11 @@ def login_page():
                                   command=lambda: on_agree(agree_var,page_frame))
     submit_button.place(x=350, y=440)
 
+#--------------------------------------------------------
 
 
-#----------------- Signup Page --------------------
+
+#----------------- Signup Button --------------------
 
 def otp_confirm_btn(confirm_otp):
     if confirm_otp == 'click':
@@ -128,10 +145,14 @@ def otp_confirm_btn(confirm_otp):
                                corner_radius=10, placeholder_text="Enter your otp")
         otp_entry.place(x=470, y=150)
 
-
 signup_page_btn=CTkButton(master=taz,text='Sign-Up',font=('Arial',20,'bold'),text_color='white',width=120,height=40,
                           corner_radius=10,border_width=2,
                          border_color='white',fg_color='#1F6AA5',command=lambda: switch_option(switch_to='signup'))
+signup_page_btn.place(x=800,y=100)
+#--------------------------------------------------------
+
+
+#----------------- Signup Page --------------------
 def signup_page():
     heading=CTkLabel(master=page_frame, text="Signup Page",font=("Bahnschrift", 28, "bold"))
     heading.place(x=325,y=20)
@@ -197,10 +218,8 @@ def signup_page():
     submit_button.place(x=350, y=440)
 
 login_page()
-#----------------- Login Button --------------------
+#--------------------------------------------------------
 
-login_page_btn.place(x=600,y=100)
-signup_page_btn.place(x=800,y=100)
 
 #-------------- Signup data insert --------------------
 def info_insert():
@@ -227,12 +246,7 @@ def info_insert():
         login_page_btn.configure(fg_color="#1F6AA5", text_color="white", border_color='white')
     else:
         messagebox.showerror("Error","The e-mail or username is already in use!")
-
-
-
-
-
-
+#--------------------------------------------------------
 
 
 #--------Admin Login--------
@@ -249,10 +263,22 @@ def admin_login():
     if data != None:
         for data in taz.winfo_children():
             data.destroy()
+        return True
     else:
         messagebox.showerror("Error","Either the username or password is incorrect")
+#--------------------------------------------------------
 
 
+#------------------------- WELCOME PAGE -------------------------------
+def welcome_page():
+    hotel_heading()
 
+
+#--------------------------------------------------------
+
+
+#------------------------ Main component--------------------------------
+login_page()
 taz.after(100, lambda: taz.state("zoomed"))
 taz.mainloop()
+#--------------------------------------------------------
